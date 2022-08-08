@@ -1,17 +1,47 @@
 <script>
+  import { onMount } from 'svelte';
   import logo from './assets/icon-dice.svg';
   import dividerMobile from './assets/pattern-divider-mobile.svg';
   import dividerDesktop from './assets/pattern-divider-desktop.svg';
   let innerWidth = 0;
+  let adviceText = '';
+  let adviceId = 0;
+
+  onMount(async () => {
+    const res = await fetch('https://api.adviceslip.com/advice');
+    const text = await res.json();
+    console.log(`advice: ${text.slip.advice}`);
+    adviceText = text.slip.advice;
+    adviceId = text.slip.id;
+  });
+
+  function handleClick() {
+    const res = fetch('https://api.adviceslip.com/advice');
+    res
+      .then((data) => {
+        return data.json();
+      })
+      .then((text) => {
+        adviceId = text.slip.id;
+        adviceText = text.slip.advice;
+      });
+  }
 </script>
 
 <svelte:window bind:innerWidth />
 <main class="advice-card">
-  <h2 class="title">Advice #117</h2>
-  <h3 class="advice-text">
-    “It is easy to sit up and take notice, what's difficult is getting up and
-    taking action.”
-  </h3>
+  {#await adviceId}
+    <h2 class="title">Loading...</h2>
+  {:then adviceId}
+    <h2 class="title">Advice #{adviceId}</h2>
+  {/await}
+  {#await adviceText}
+    <h3 class="advice-text">Fetching advice...</h3>
+  {:then adviceText}
+    <h3 class="advice-text">
+      {adviceText}
+    </h3>
+  {/await}
   {#if innerWidth < 768}
     <img class="divider" src={dividerMobile} alt="divider-mobile" />
   {:else}
@@ -19,7 +49,7 @@
   {/if}
 </main>
 
-<button class="advice-button"
+<button on:click={handleClick} class="advice-button"
   ><img src={logo} width="24px" height="24px" alt="logo" /></button
 >
 

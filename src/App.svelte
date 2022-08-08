@@ -1,15 +1,22 @@
 <script>
   import logo from './assets/icon-dice.svg';
   import dividerMobile from './assets/pattern-divider-mobile.svg';
+  import dividerDesktop from './assets/pattern-divider-desktop.svg';
+  let innerWidth = 0;
 </script>
 
+<svelte:window bind:innerWidth />
 <main class="advice-card">
-  <p class="title">Advice #117</p>
-  <h1 class="advice-text">
+  <h2 class="title">Advice #117</h2>
+  <h3 class="advice-text">
     “It is easy to sit up and take notice, what's difficult is getting up and
     taking action.”
-  </h1>
-  <img class="divider" src={dividerMobile} alt="divider-mobile" />
+  </h3>
+  {#if innerWidth < 768}
+    <img class="divider" src={dividerMobile} alt="divider-mobile" />
+  {:else}
+    <img class="divider" src={dividerDesktop} alt="divider-mobile" />
+  {/if}
 </main>
 
 <button class="advice-button"
@@ -72,5 +79,59 @@
 
   .advice-button:active {
     transform: translateY(2px);
+  }
+
+  @media screen and (min-width: 768px) {
+    .advice-card {
+      width: 540px;
+      height: 364px;
+      background-color: #313a48;
+      border-radius: 15px;
+    }
+
+    .title {
+      font-family: 'Manrope', sans-serif;
+      color: #53ffaa;
+      font-size: 13px;
+      line-height: 17.76px;
+      letter-spacing: 4.09px;
+      text-align: center;
+      margin-top: 48px;
+      margin-bottom: 0px;
+    }
+
+    .advice-text {
+      font-family: 'Manrope', sans-serif;
+      width: 444px;
+      height: 114px;
+      color: #cee3e9;
+      font-weight: 800;
+      font-size: 28px;
+      line-height: 38.25px;
+      letter-spacing: -0.3px;
+      text-align: center;
+      margin-left: 48px;
+      margin-right: 48px;
+      margin-top: 24px;
+      margin-bottom: 0px;
+    }
+
+    .divider {
+      margin-top: 40px;
+      margin-left: 48px;
+      margin-right: 48px;
+      height: 16px;
+      width: 444px;
+    }
+
+    .advice-button {
+      display: block;
+      width: 64px;
+      height: 64px;
+      border-radius: 100%;
+      margin-top: -32px;
+      background-color: #53ffaa;
+      border: 1px solid #53ffaa;
+    }
   }
 </style>
